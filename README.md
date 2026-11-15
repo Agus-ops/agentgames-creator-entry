@@ -116,3 +116,7 @@ Don't trust the agent — including this one. Trust is not a feature you ship; v
 ---
 
 *Artifacts in this repo: `input.json` (scenario), `proof.json` / `public.json` (approve proof), `proof-reject.json` / `public-reject.json` (reject proof), `verification_key.json`, `RESULTS.md` (full command log and test matrix). Circuit binaries are the platform's — download them from `agentgames.zkverify.io/circuits` and compare SHA-256 against the table above.*
+
+---
+
+*Submitted to the Agent Games Creator Track — #AgentGames Season 01, by [@ZKVProtocol](https://x.com/ZKVProtocol) / zkVerify.*
