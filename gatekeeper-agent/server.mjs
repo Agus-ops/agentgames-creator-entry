@@ -17,7 +17,7 @@
 
 import { createServer } from "node:http";
 import { createHmac, createHash, randomBytes, timingSafeEqual } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,6 +40,32 @@ const OFFICIAL_VK =
 // reduce explicitly so the values we log are the values in the proof).
 const BN254_PRIME =
   21888242871839275222246405745257275088548364400416034343698204186575808495617n;
+
+// ---------------------------------------------------------------------------
+// PROOF_REUSED trap (~11% of tasks): a proof reference that was already
+// accepted in a previous task must be rejected, and the reference recorded
+// as seen. The platform excludes these tasks from proving entirely — the
+// correct response is a REJECT with NO proof (a decision=0 proof is also
+// impossible when every other field is valid: the circuit binds decision
+// to the checks). The seen-set is file-backed so it survives restarts.
+// ---------------------------------------------------------------------------
+const SEEN_PATH = join(HERE, "seen-proof-tx.json");
+const seenProofTx = new Set();
+try {
+  for (const v of JSON.parse(readFileSync(SEEN_PATH, "utf8"))) {
+    if (typeof v === "string" && v) seenProofTx.add(v.toLowerCase());
+  }
+} catch {
+  /* no seen-file yet — start empty */
+}
+function recordSeenProofTx(ref) {
+  seenProofTx.add(ref);
+  try {
+    writeFileSync(SEEN_PATH, JSON.stringify([...seenProofTx]));
+  } catch {
+    /* non-fatal: in-memory set still guards this process lifetime */
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Secret: env first, then ~/.agentgames-hmac. Never logged, never echoed.
@@ -198,6 +224,18 @@ async function handleTask(res, envelope) {
   let reasonCode = "INTERNAL_ERROR";
   let proof = null;
   let publicSignals = null;
+
+  const proofTxRef =
+    typeof input.proof_tx === "string" ? input.proof_tx.toLowerCase() : "";
+  if (proofTxRef && seenProofTx.has(proofTxRef)) {
+    // Reused proof reference: correct answer is REJECT with no proof.
+    console.log(
+      `[task ${taskId}] REJECT PROOF_REUSED proof=no ${Date.now() - started}ms`
+    );
+    sendSigned(res, 200, { decision: "REJECT", reason_code: "PROOF_REUSED" });
+    return;
+  }
+  if (proofTxRef) recordSeenProofTx(proofTxRef);
 
   try {
     const verdict = decide(input);
