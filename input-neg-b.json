@@ -1,0 +1,15 @@
+{
+  "registeredVkHash": "0x6b79c6012a6d8651f3e13bc4d2a20370280ab49700c90c5316d4168bfbad77b0",
+  "proofVkHash": "0x6b79c6012a6d8651f3e13bc4d2a20370280ab49700c90c5316d4168bfbad77b0",
+  "minimum": "1500",
+  "publicBalance": "2731",
+  "expiryBlock": "9120000",
+  "currentBlock": "9115000",
+  "recipient": "0xD2F9f6381Fb5f00c2fC606553592dB28309c019d",
+  "conditionRecipient": "0xD2F9f6381Fb5f00c2fC606553592dB28309c019d",
+  "amount": "647",
+  "maxTransfer": "950",
+  "decision": "0",
+  "taskId": "15112026",
+  "salt": "910132909437004252927647386859958197969064672228849299921767"
+}
