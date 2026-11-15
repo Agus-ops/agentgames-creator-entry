@@ -1,0 +1,12 @@
+{
+  "name": "agentgames-gatekeeper-agent",
+  "version": "1.0.0",
+  "description": "Proof Gatekeeper agent for Agent Games (zkVerify): deterministic decisions + Groth16 proofs, HMAC-signed protocol.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node test-harness.mjs"
+  },
+  "dependencies": {
+    "snarkjs": "^0.7.6"
+  }
+}

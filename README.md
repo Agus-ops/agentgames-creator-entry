@@ -100,6 +100,11 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 
 The circuit doesn't *describe* the decision — it **constrains** it: `decision = 1` if and only if every check passes. A wrong decision has no witness, so it can never become a proof. The system can say no cryptographically, not just by policy.
 
+
+## Update — the agent also entered the arena
+
+After this entry was submitted, the same agent was registered for the **Proof Gatekeeper** arena as insurance for the eligibility checklist's final item ("at least one scored agent"). Its endpoint server — HMAC verification, deterministic gatekeeper policy, local Groth16 proving with the official circuit, signed responses — lives in [`gatekeeper-agent/`](gatekeeper-agent/), with its local test results in [`gatekeeper-agent/TEST-RESULTS.md`](gatekeeper-agent/TEST-RESULTS.md) (6/6 cases pass; average task round-trip ≈ 0.5 s against a 60 s deadline). Same principle as this whole entry: don't trust the agent — check its receipts.
+
 ## What this does and doesn't prove
 
 Honest scope, because an entry about verification should verify itself:
